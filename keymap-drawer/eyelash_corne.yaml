@@ -46,9 +46,9 @@ layers:
   - {t: '$$mdi:keyboard-esc$$', h: Sym}
   - {t: '$$mdi:keyboard-space$$', h: Num}
   - {t: '$$mdi:keyboard-tab$$', h: Fn}
-  - {t: '$$mdi:backspace-reverse-outline$$', h: Sys}
+  - {t: '$$mdi:keyboard-return$$', h: Sys}
   - {t: '$$mdi:backspace$$', h: Nav}
-  - {t: '$$mdi:keyboard-return$$', h: Mouse}
+  - {t: '$$mdi:backspace-reverse-outline$$', h: Mouse}
   Nav:
   - (
   - PG UP
