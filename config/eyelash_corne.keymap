@@ -107,7 +107,7 @@
             bindings = <
 &kp LBKT  &kp PG_UP  &kp HOME  &kp UP    &kp END   &kp INS                               &trans                    &none  &none   &none   &none   &none  &kp RBKT
 &trans  &kp PG_DN &kp LEFT  &kp DOWN  &kp RIGHT &kp CAPS          &trans  &trans  &trans  &none  &kp RSHFT &kp RCTL &kp LALT &kp RGUI &trans
-&trans  &kp K_UNDO &kp K_CUT &kp K_COPY &kp K_PASTE &kp K_AGAIN  &trans             &trans          &none  &none   &none   &none   &none  &trans
+&trans  &kp K_UNDO &kp K_CUT &kp K_COPY &kp K_PASTE &kp K_AGAIN  &trans             &none          &none  &none   &none   &none   &none  &trans
                         &none   &none   &none                                   &none        &trans     &none
             >;
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
@@ -120,7 +120,7 @@
             bindings = <
 &kp LBKT  &kp LG(N1)  &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)                              &kp UP              &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT  &kp RBKT
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &kp LEFT  &kp RET  &kp RIGHT  &kp EQUAL  &kp N4  &kp N5  &kp N6  &kp SQT   &trans
-&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &trans          &kp DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
+&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &none          &kp DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
                                 &none       &trans      &none                                       &kp GRAVE  &kp DOT &kp N0
             >;
             sensor-bindings = <&scroll_encoder>;
@@ -133,7 +133,7 @@
             bindings = <
 &trans  &none       &none       &none       &none       &none                                   &msc SCRL_UP                    &kp LBRC    &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC  &trans
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &kp KP_PLUS &kp DLLR   &kp PRCNT  &kp CARET  &kp DQT   &trans
-&trans  &none       &none       &none       &none       &none       &trans          &msc SCRL_DOWN          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
+&trans  &none       &none       &none       &none       &none       &none          &msc SCRL_DOWN          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
                                 &none       &none       &trans                                      &kp TILDE   &kp LPAR   &kp RPAR
             >;
             sensor-bindings = <&scroll_encoder>;
@@ -162,7 +162,7 @@
             bindings = <
 &kp LBRC  &none       &none       &none       &none       &none                              &kp PG_UP                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &kp HOME  &none  &kp END  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
-&trans  &none       &none       &none       &none       &none        &trans          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
+&trans  &none       &none       &none       &none       &none        &none          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
                                 &trans      &none       &none                                       &none            &none   &none
             >;
             sensor-bindings = <&scroll_encoder>;
@@ -177,7 +177,7 @@
             bindings = <
 &none  &none  &none  &mmv MOVE_UP  &none  &none                              &trans                    &none  &none  &none  &none  &none  &none
 &none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &none                  &trans  &trans  &trans  &none   &kp RSHFT  &kp RCTL  &kp LALT  &kp RGUI  &trans
-&none  &none  &none  &none  &none  &none        &trans          &trans          &none  &none  &none  &none  &none  &trans
+&none  &none  &none  &none  &none  &none        &none          &trans          &none  &none  &none  &none  &none  &trans
                                 &none      &mkp LCLK   &mkp RCLK                                   &none  &none  &trans
             >;
             sensor-bindings = <&scroll_encoder>;
