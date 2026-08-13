@@ -58,6 +58,12 @@
             bindings = <&rgb_ug RGB_EFF>, <&rgb_ug RGB_EFR>;
         };
 
+        bl_encoder: bl_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&bl BL_DEC>, <&bl BL_INC>;
+        };
+
         scroll_encoder: scroll_encoder {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
@@ -81,16 +87,21 @@
         // Cheapino base layer migrated to 6-col Corne.
         // Outer pinky column: top ( / ) — becomes [ / ] under Num(SPACE)/Nav(BSPC),
         // { / } under Fn(TAB)/Sys(DEL). Home: Caps Word / GUI+F9. Bottom: GUI+SPACE / GUI+RET.
-        // Joystick (5-way): up/down/left/right = mouse move, press = left click.
-        // Held with SPACE (Num layer): up/down/left/right = scroll, press = right click.
-        // Thumbs: L=ESC(L3)/SPC(L2)/TAB(L5)  R=DEL(L4)/BSPC(L1)/RET(plain)
+        // Joystick (5-way), per held thumb layer:
+        //   Base:  move mouse, press = left click.
+        //   Num:   arrow keys, press = Enter.
+        //   Sym:   scroll, press = right click.
+        //   Fn:    PgUp/PgDn/Home/End, press = none.
+        //   Sys:   RGB effect prev/next, up/down = speed, press = RGB toggle.
+        //   Mouse: inherits Base (move mouse / left click).
+        // Thumbs: L=ESC(L3)/SPC(L2)/TAB(L5)  R=DEL(L4)/BSPC(L1)/RET(L6=Mouse)
         default_layer {
             display-name = "Base";
             bindings = <
 &kp LPAR  &kp Q        &kp W        &kp E        &kp R        &kp T                                   &mmv MOVE_UP              &kp Y      &kp U        &kp I         &kp O          &kp P            &kp RPAR
 &caps_word  &hrm LGUI A  &hrm LALT S  &hrm LCTL D  &hrm LSHFT F &kp G              &mmv MOVE_LEFT  &mkp LCLK  &mmv MOVE_RIGHT  &kp H      &hrm RSHFT J &hrm RCTL K   &hrm LALT L    &hrm RGUI SEMI   &kp LG(F9)
 &kp LG(SPACE)  &lt 4 Z      &hrm RALT X  &kp C        &td_v        &kp B    &kp C_MUTE         &mmv MOVE_DOWN          &kp N      &kp M        &kp COMMA     &hrm RALT DOT  &kp FSLH         &kp LG(RET)
-                                  &lt 3 ESC    &lt 2 SPACE  &lt 5 TAB                               &lt 4 DEL  &lt 1 BSPC   &kp RET
+                                  &lt 3 ESC    &lt 2 SPACE  &lt 5 TAB                               &lt 4 DEL  &lt 1 BSPC   &lt 6 RET
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
@@ -113,9 +124,9 @@
         num_layer {
             display-name = "Num";
             bindings = <
-&kp LBKT  &kp LG(N1)  &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)                              &msc SCRL_UP              &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT  &kp RBKT
-&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &kp EQUAL  &kp N4  &kp N5  &kp N6  &kp SQT   &trans
-&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &trans          &msc SCRL_DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
+&kp LBKT  &kp LG(N1)  &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)                              &kp UP              &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT  &kp RBKT
+&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &kp LEFT  &kp RET  &kp RIGHT  &kp EQUAL  &kp N4  &kp N5  &kp N6  &kp SQT   &trans
+&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &trans          &kp DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
                                 &none       &trans      &none                                       &kp GRAVE  &kp DOT &kp N0
             >;
             sensor-bindings = <&scroll_encoder>;
@@ -126,26 +137,28 @@
         sym_layer {
             display-name = "Sym";
             bindings = <
-&trans  &none       &none       &none       &none       &none                                   &trans                    &kp LBRC    &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC  &trans
-&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &trans  &trans  &trans  &kp KP_PLUS &kp DLLR   &kp PRCNT  &kp CARET  &kp DQT   &trans
-&trans  &none       &none       &none       &none       &none       &trans          &trans          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
+&trans  &none       &none       &none       &none       &none                                   &msc SCRL_UP                    &kp LBRC    &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC  &trans
+&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &kp KP_PLUS &kp DLLR   &kp PRCNT  &kp CARET  &kp DQT   &trans
+&trans  &none       &none       &none       &none       &none       &trans          &msc SCRL_DOWN          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
                                 &none       &none       &trans                                      &kp TILDE   &kp LPAR   &kp RPAR
             >;
             sensor-bindings = <&scroll_encoder>;
         };
 
         // Sys layer (hold DEL right-outer thumb, or Z on the left hand).
-        // Left: Bluetooth, output, reset/bootloader, media. Right: mods only (bootloader/sys_reset always execute
-        // on the central/left half regardless of which physical key triggers them, so a right-hand copy is redundant).
+        // Left: bootloader, reset, media, studio unlock. Right: BT channel select (top row from U),
+        // output select / BT clear (bottom row from M), plus same-hand mods.
+        // Joystick: left/right = prev/next RGB effect, up/down = RGB speed, press = RGB toggle.
+        // Encoder: rotate = backlight brightness, click = backlight toggle.
         sys_layer {
             display-name = "Sys";
             bindings = <
-&kp LBRC  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bootloader                          &trans                    &none   &none  &none  &none  &none  &kp RBRC
-&trans  &out OUT_USB  &out OUT_BLE  &bt BT_CLR    &bt BT_CLR_ALL &studio_unlock   &trans  &trans  &trans  &studio_unlock   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
-&trans  &kp C_PREV    &kp C_STOP    &kp C_PP      &kp C_NEXT    &sys_reset   &rgb_ug RGB_TOG &trans          &none   &none         &none         &none    &none    &trans
+&kp LBRC  &none  &none  &none  &none  &bootloader                          &rgb_ug RGB_SPI                    &none   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp RBRC
+&trans  &none  &none  &none  &none  &studio_unlock   &rgb_ug RGB_EFR  &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &studio_unlock   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
+&trans  &kp C_PREV    &kp C_STOP    &kp C_PP      &kp C_NEXT    &sys_reset   &bl BL_TOG &rgb_ug RGB_SPD          &none   &out OUT_USB         &out OUT_BLE         &bt BT_CLR    &bt BT_CLR_ALL    &trans
                                     &none         &none         &none                                   &trans  &none         &none
             >;
-            sensor-bindings = <&rgb_encoder>;
+            sensor-bindings = <&bl_encoder>;
         };
 
         // Fn layer (hold TAB left-outer thumb).
@@ -153,10 +166,25 @@
         fn_layer {
             display-name = "Fn";
             bindings = <
-&kp LBRC  &none       &none       &none       &none       &none                              &trans                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
-&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &trans  &trans  &trans  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
-&trans  &none       &none       &none       &none       &none        &trans          &trans          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
+&kp LBRC  &none       &none       &none       &none       &none                              &kp PG_UP                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
+&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &kp HOME  &none  &kp END  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
+&trans  &none       &none       &none       &none       &none        &trans          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
                                 &trans      &none       &none                                       &none            &none   &none
+            >;
+            sensor-bindings = <&scroll_encoder>;
+        };
+
+        // Mouse layer (hold RET right-inner thumb).
+        // Left: mouse movement mirroring Nav layer's arrow-cluster positions (up on E, left/down/right on S/D/F).
+        // Thumbs: SPACE = left click, TAB = right click. Right hand: same-hand mods only.
+        // Joystick/encoder inherit Base (move mouse / left click / volume) — no override needed.
+        mouse_layer {
+            display-name = "Mouse";
+            bindings = <
+&none  &none  &none  &mmv MOVE_UP  &none  &none                              &trans                    &none  &none  &none  &none  &none  &none
+&none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &none                  &trans  &trans  &trans  &none   &kp RSHFT  &kp RCTL  &kp LALT  &kp RGUI  &trans
+&none  &none  &none  &none  &none  &none        &trans          &trans          &none  &none  &none  &none  &none  &trans
+                                &none      &mkp LCLK   &mkp RCLK                                   &none  &none  &trans
             >;
             sensor-bindings = <&scroll_encoder>;
         };
