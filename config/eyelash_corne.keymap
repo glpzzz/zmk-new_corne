@@ -91,7 +91,8 @@
         //   Base:  move mouse, press = left click.
         //   Num:   arrow keys, press = Enter.
         //   Sym:   scroll, press = right click.
-        //   Fn:    PgUp/PgDn/Home/End, press = none.
+        //   Nav:   PgUp/PgDn/Home/End, press = none.
+        //   Fn:    none.
         //   Sys:   none.
         //   Mouse: none (use SPACE/TAB thumb keys for clicks instead).
         // Thumbs: L=ESC(L3)/SPC(L2)/TAB(L5)  R=DEL(L4)/BSPC(L1)/RET(L6=Mouse)
@@ -111,9 +112,9 @@
         nav_layer {
             display-name = "Nav";
             bindings = <
-&kp LBKT  &kp PG_UP  &kp HOME  &kp UP    &kp END   &kp INS                               &none                    &none  &none   &none   &none   &none  &kp RBKT
-&trans  &kp PG_DN &kp LEFT  &kp DOWN  &kp RIGHT &kp CAPS          &none  &none  &none  &none  &kp RSHFT &kp RCTL &kp LALT &kp RGUI &trans
-&trans  &kp K_UNDO &kp K_CUT &kp K_COPY &kp K_PASTE &kp K_AGAIN  &none             &none          &none  &none   &none   &none   &none  &trans
+&kp LBKT  &kp PG_UP  &kp HOME  &kp UP    &kp END   &kp INS                               &kp PG_UP                    &none  &none   &none   &none   &none  &kp RBKT
+&trans  &kp PG_DN &kp LEFT  &kp DOWN  &kp RIGHT &kp CAPS          &kp HOME  &none  &kp END  &none  &kp RSHFT &kp RCTL &kp LALT &kp RGUI &trans
+&trans  &kp K_UNDO &kp K_CUT &kp K_COPY &kp K_PASTE &kp K_AGAIN  &none             &kp PG_DN          &none  &none   &none   &none   &none  &trans
                         &none   &none   &none                                   &none        &trans     &none
             >;
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
@@ -146,7 +147,7 @@
         };
 
         // Sys layer (hold DEL right-outer thumb, or Z on the left hand).
-        // Left: bootloader, reset, media, studio unlock. Right: BT channel select (top row from U),
+        // Left: bootloader, reset, studio unlock. Right: BT channel select (top row from U),
         // output select / BT clear (bottom row from M), plus same-hand mods.
         // Joystick: none.
         // Encoder: rotate = RGB effect prev/next, click = RGB toggle.
@@ -154,21 +155,21 @@
             display-name = "Sys";
             bindings = <
 &kp LBRC  &none  &none  &none  &none  &bootloader                          &none                    &none   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp RBRC
-&trans  &none  &none  &none  &none  &studio_unlock   &none  &none  &none  &studio_unlock   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
-&trans  &kp C_PREV    &kp C_STOP    &kp C_PP      &kp C_NEXT    &sys_reset   &rgb_ug RGB_TOG &none          &none   &out OUT_USB         &out OUT_BLE         &bt BT_CLR    &bt BT_CLR_ALL    &trans
+&trans  &none  &none  &none  &none  &studio_unlock   &none  &none  &none  &none   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
+&trans  &none    &none    &none      &none    &sys_reset   &rgb_ug RGB_TOG &none          &none   &out OUT_USB         &out OUT_BLE         &bt BT_CLR    &bt BT_CLR_ALL    &trans
                                     &none         &none         &none                                   &trans  &none         &none
             >;
             sensor-bindings = <&rgb_encoder>;
         };
 
         // Fn layer (hold TAB left-outer thumb).
-        // Right: function keys. Left: OS mods.
+        // Right: function keys. Left: OS mods (home row), media transport (bottom row).
         fn_layer {
             display-name = "Fn";
             bindings = <
-&kp LBRC  &none       &none       &none       &none       &none                              &kp PG_UP                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
-&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &kp HOME  &none  &kp END  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
-&trans  &none       &none       &none       &none       &none        &none          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
+&kp LBRC  &none       &none       &none       &none       &none                              &none                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
+&trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &none  &none  &none  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
+&trans  &kp C_PREV       &kp C_STOP       &kp C_PP       &kp C_NEXT       &none        &none          &none          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
                                 &trans      &none       &none                                       &none            &none   &none
             >;
             sensor-bindings = <&no_encoder>;
