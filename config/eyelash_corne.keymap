@@ -4,7 +4,6 @@
 #include <input/processors.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/backlight.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/outputs.h>
@@ -59,12 +58,6 @@
             bindings = <&rgb_ug RGB_EFF>, <&rgb_ug RGB_EFR>;
         };
 
-        bl_encoder: bl_encoder {
-            compatible = "zmk,behavior-sensor-rotate";
-            #sensor-binding-cells = <0>;
-            bindings = <&bl BL_DEC>, <&bl BL_INC>;
-        };
-
         scroll_encoder: scroll_encoder {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
@@ -93,7 +86,7 @@
         //   Num:   arrow keys, press = Enter.
         //   Sym:   scroll, press = right click.
         //   Fn:    PgUp/PgDn/Home/End, press = none.
-        //   Sys:   RGB effect prev/next, up/down = speed, press = RGB toggle.
+        //   Sys:   up/down = RGB brightness, left/right = RGB speed, press = ext-power toggle.
         //   Mouse: inherits Base (move mouse / left click).
         // Thumbs: L=ESC(L3)/SPC(L2)/TAB(L5)  R=DEL(L4)/BSPC(L1)/RET(L6=Mouse)
         default_layer {
@@ -149,17 +142,17 @@
         // Sys layer (hold DEL right-outer thumb, or Z on the left hand).
         // Left: bootloader, reset, media, studio unlock. Right: BT channel select (top row from U),
         // output select / BT clear (bottom row from M), plus same-hand mods.
-        // Joystick: left/right = prev/next RGB effect, up/down = RGB speed, press = RGB toggle.
-        // Encoder: rotate = backlight brightness, click = backlight toggle.
+        // Joystick: up/down = RGB brightness, left/right = RGB speed, press = ext-power toggle.
+        // Encoder: rotate = RGB effect prev/next, click = RGB toggle.
         sys_layer {
             display-name = "Sys";
             bindings = <
-&kp LBRC  &none  &none  &none  &none  &bootloader                          &rgb_ug RGB_SPI                    &none   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp RBRC
-&trans  &none  &none  &none  &none  &studio_unlock   &rgb_ug RGB_EFR  &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &studio_unlock   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
-&trans  &kp C_PREV    &kp C_STOP    &kp C_PP      &kp C_NEXT    &sys_reset   &bl BL_TOG &rgb_ug RGB_SPD          &none   &out OUT_USB         &out OUT_BLE         &bt BT_CLR    &bt BT_CLR_ALL    &trans
+&kp LBRC  &none  &none  &none  &none  &bootloader                          &rgb_ug RGB_BRI                    &none   &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp RBRC
+&trans  &none  &none  &none  &none  &studio_unlock   &rgb_ug RGB_SPD  &ext_power EP_TOG  &rgb_ug RGB_SPI  &studio_unlock   &kp RSHFT  &kp RCTL  &kp LALT    &kp RGUI &trans
+&trans  &kp C_PREV    &kp C_STOP    &kp C_PP      &kp C_NEXT    &sys_reset   &rgb_ug RGB_TOG &rgb_ug RGB_BRD          &none   &out OUT_USB         &out OUT_BLE         &bt BT_CLR    &bt BT_CLR_ALL    &trans
                                     &none         &none         &none                                   &trans  &none         &none
             >;
-            sensor-bindings = <&bl_encoder>;
+            sensor-bindings = <&rgb_encoder>;
         };
 
         // Fn layer (hold TAB left-outer thumb).
