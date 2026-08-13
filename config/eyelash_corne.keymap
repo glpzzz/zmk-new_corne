@@ -120,10 +120,10 @@
             bindings = <
 &kp LBKT  &kp LG(N1)  &kp LG(N2)  &kp LG(N3)  &kp LG(N4)  &kp LG(N5)                              &kp UP              &kp LBKT   &kp N7  &kp N8  &kp N9  &kp RBKT  &kp RBKT
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &kp LEFT  &kp RET  &kp RIGHT  &kp EQUAL  &kp N4  &kp N5  &kp N6  &kp SQT   &trans
-&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &none          &kp DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
+&trans  &kp LG(N6)  &kp LG(N7)  &kp LG(N8)  &kp LG(N9)  &kp LG(N0)  &trans          &kp DOWN          &kp MINUS  &kp N1  &kp N2  &kp N3  &kp BSLH  &trans
                                 &none       &trans      &none                                       &kp GRAVE  &kp DOT &kp N0
             >;
-            sensor-bindings = <&scroll_encoder>;
+            sensor-bindings = <&trans>;
         };
 
         // Sym layer (hold ESC left-mid thumb).
@@ -133,10 +133,10 @@
             bindings = <
 &trans  &none       &none       &none       &none       &none                                   &msc SCRL_UP                    &kp LBRC    &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC  &trans
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &kp KP_PLUS &kp DLLR   &kp PRCNT  &kp CARET  &kp DQT   &trans
-&trans  &none       &none       &none       &none       &none       &none          &msc SCRL_DOWN          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
+&trans  &none       &none       &none       &none       &none       &trans          &msc SCRL_DOWN          &kp UNDER   &kp EXCL   &kp AT     &kp HASH   &kp PIPE  &trans
                                 &none       &none       &trans                                      &kp TILDE   &kp LPAR   &kp RPAR
             >;
-            sensor-bindings = <&scroll_encoder>;
+            sensor-bindings = <&trans>;
         };
 
         // Sys layer (hold DEL right-outer thumb, or Z on the left hand).
@@ -162,10 +162,10 @@
             bindings = <
 &kp LBRC  &none       &none       &none       &none       &none                              &kp PG_UP                    &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12           &kp RBRC
 &trans  &kp LGUI    &kp LALT    &kp LCTL    &kp LSHFT   &none                  &kp HOME  &none  &kp END  &kp SCROLLLOCK   &kp F4  &kp F5  &kp F6  &kp F11           &trans
-&trans  &none       &none       &none       &none       &none        &none          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
+&trans  &none       &none       &none       &none       &none        &trans          &kp PG_DN          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10           &trans
                                 &trans      &none       &none                                       &none            &none   &none
             >;
-            sensor-bindings = <&scroll_encoder>;
+            sensor-bindings = <&trans>;
         };
 
         // Mouse layer (hold RET right-inner thumb).
