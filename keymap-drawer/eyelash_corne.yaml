@@ -203,7 +203,7 @@ layers:
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - $$mdi:progress-download$$
-  - RGB BRI
+  - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {h: '1', s: '$$mdi:bluetooth-connect$$'}
   - {h: '2', s: '$$mdi:bluetooth-connect$$'}
@@ -216,9 +216,9 @@ layers:
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - '&studio_unlock'
-  - RGB SPD
-  - EP TOG
-  - RGB SPI
+  - {t: '$$mdi:transfer$$', type: trans}
+  - {t: '$$mdi:transfer$$', type: trans}
+  - {t: '$$mdi:transfer$$', type: trans}
   - '&studio_unlock'
   - $$mdi:apple-keyboard-shift$$
   - RCTL
@@ -232,7 +232,7 @@ layers:
   - $$mdi:skip-next$$
   - {t: '$$mdi:backup-restore$$', type: bootloader}
   - RGB TOG
-  - RGB BRD
+  - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - OUT USB
   - OUT BLE
