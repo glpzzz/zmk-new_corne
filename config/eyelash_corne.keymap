@@ -77,7 +77,11 @@
 
         // Miryoku (github.com/manna-harbour/miryoku), QWERTY alphas, transcribed from
         // the canonical reference (manna-harbour/miryoku_zmk, non-flip, default Nav/
-        // clipboard/mousekeys variants). Simplifications from stock Miryoku:
+        // clipboard/mousekeys variants), then hand-inverted: the FLIP variant's hold
+        // targets and mirrored per-layer content are used, but the thumb tap keycodes
+        // are kept at their original (non-flip) physical positions (ESC/SPACE/TAB left,
+        // RET/BSPC/DEL right) instead of FLIP's own mirrored tap keycodes.
+        // Simplifications from stock Miryoku:
         //   - Single alpha layer only (no Extra/Tap alternate-base switching).
         //   - Per-layer "layer lock" toggle corners dropped (kept plain &to 0 / bootloader).
         //   - RGB/BT/output shift-combo tricks (e.g. shift+BT_SEL=clear) not implemented;
@@ -90,99 +94,85 @@
         // (not by which thumb key now triggers it): Base=mouse/vol, Nav=nav keys/pgup-dn,
         // Num=arrows+Enter/none, Sym=scroll+Rclick/none, Media=none/RGB effect+toggle,
         // Fun=none/none, Mouse=none/scroll, Button=none/none.
-        // Thumbs: L=ESC(Media)/SPACE(Nav)/TAB(Mouse)  R=RET(Sym)/BSPC(Num)/DEL(Fun)
+        // Thumbs (tap keycode unchanged, hold target inverted):
+        //   L=ESC(Fun)/SPACE(Num)/TAB(Sym)  R=RET(Mouse)/BSPC(Nav)/DEL(Media)
         default_layer {
             display-name = "Base";
             bindings = <
 &kp MINUS  &kp Q  &kp W  &kp E  &kp R  &kp T                                   &mmv MOVE_UP              &kp Y  &kp U  &kp I  &kp O  &kp P            &kp EQUAL
-&trans  &hrm LGUI A  &hrm LALT S  &hrm LCTRL D  &hrm LSHFT F  &kp G              &mmv MOVE_LEFT  &mkp LCLK  &mmv MOVE_RIGHT  &kp H  &hrm LSHFT J  &hrm LCTRL K  &hrm LALT L  &hrm LGUI SQT   &trans
+&trans  &hrm LGUI A  &hrm LALT S  &hrm LCTRL D  &hrm LSHFT F  &kp G              &mmv MOVE_LEFT  &mkp LCLK  &mmv MOVE_RIGHT  &kp H  &hrm LSHFT J  &hrm LCTRL K  &hrm LALT L  &hrm LGUI SEMI   &trans
 &trans  &lt 7 Z  &hrm RALT X  &kp C  &kp V  &kp B       &kp C_MUTE &mmv MOVE_DOWN          &kp N  &kp M  &kp COMMA  &hrm RALT DOT  &lt 7 SLASH    &trans
-                                &lt 4 ESC  &lt 1 SPACE  &lt 6 TAB   &lt 3 RET  &lt 2 BSPC  &lt 5 DEL
+                                &lt 5 ESC  &lt 2 SPACE  &lt 3 TAB   &lt 6 RET  &lt 1 BSPC  &lt 4 DEL
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
-        // Nav layer (hold SPACE left-mid thumb). Content on right hand: clipboard on
-        // top row, cursor keys on home row, page/insert on bottom row. Left hand: mods
-        // for chording, plus reset/base-return in the same corner as other sublayers.
         nav_layer {
             display-name = "Nav";
             bindings = <
-&kp LPAR  &bootloader  &none  &none  &to 0  &none                                   &kp PG_UP              &kp K_AGAIN  &kp LS(INS)  &kp LC(INS)  &kp LS(DEL)  &kp K_UNDO            &kp RPAR
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &kp HOME  &none  &kp END  &caps_word  &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT   &trans
-&trans  &none  &kp RALT  &none  &none  &none       &none &kp PG_DN          &kp INS  &kp HOME  &kp PG_DN  &kp PG_UP  &kp END    &trans
-                                &none  &none  &none   &kp RET  &kp BSPC  &kp DEL
+&kp LPAR  &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &kp INS                                   &kp PG_UP              &none  &to 0  &none  &none  &bootloader            &kp RPAR
+&trans  &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &caps_word              &kp HOME  &none  &kp END  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
+&trans  &kp K_UNDO  &kp LS(DEL)  &kp LC(INS)  &kp LS(INS)  &kp K_AGAIN       &none &kp PG_DN          &none  &none  &none  &kp RALT  &none    &trans
+                                &kp DEL  &kp BSPC  &kp RET   &none  &none  &none
             >;
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
 
-        // Num layer (hold BSPC right-mid thumb). Content on left hand: numpad digits
-        // with symbols in the remaining positions. Right hand: mods for chording.
         num_layer {
             display-name = "Num";
             bindings = <
-&kp LPAR  &kp LBKT  &kp N7  &kp N8  &kp N9  &kp RBKT                                   &kp UP              &none  &to 0  &none  &none  &bootloader            &kp RPAR
-&trans  &kp SEMI  &kp N4  &kp N5  &kp N6  &kp EQUAL              &kp LEFT  &kp RET  &kp RIGHT  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
-&trans  &kp GRAVE  &kp N1  &kp N2  &kp N3  &kp BSLH       &none &kp DOWN          &none  &none  &none  &kp RALT  &none    &trans
-                                &kp DOT  &kp N0  &kp MINUS   &none  &none  &none
+&kp LPAR  &bootloader  &none  &none  &to 0  &none                                   &kp UP              &kp LBKT  &kp N7  &kp N8  &kp N9  &kp RBKT            &kp RPAR
+&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &kp LEFT  &kp RET  &kp RIGHT  &kp EQUAL  &kp N4  &kp N5  &kp N6  &kp SQT   &trans
+&trans  &none  &kp RALT  &none  &none  &none       &none &kp DOWN          &kp BSLH  &kp N1  &kp N2  &kp N3  &kp GRAVE    &trans
+                                &none  &none  &none   &kp MINUS  &kp N0  &kp DOT
             >;
             sensor-bindings = <&no_encoder>;
         };
 
-        // Sym layer (hold RET right-inner thumb). Content on left hand: shifted
-        // symbols in the same locations as Num, to reduce chording with mods.
         sym_layer {
             display-name = "Sym";
             bindings = <
-&kp LBKT  &kp LBRC  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RBRC                                   &msc SCRL_UP              &none  &to 0  &none  &none  &bootloader            &kp RBKT
-&trans  &kp COLON  &kp DLLR  &kp PRCNT  &kp CARET  &kp PLUS              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
-&trans  &kp TILDE  &kp EXCL  &kp AT  &kp HASH  &kp PIPE       &none &msc SCRL_DOWN          &none  &none  &none  &kp RALT  &none    &trans
-                                &kp LPAR  &kp RPAR  &kp UNDER   &none  &none  &none
+&kp LBKT  &bootloader  &none  &none  &to 0  &none                                   &msc SCRL_UP              &kp LBRC  &kp AMPS  &kp ASTRK  &kp LPAR  &kp RBRC            &kp RBKT
+&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &msc SCRL_LEFT  &mkp RCLK  &msc SCRL_RIGHT  &kp PLUS  &kp DLLR  &kp PRCNT  &kp CARET  &kp COLON   &trans
+&trans  &none  &kp RALT  &none  &none  &none       &none &msc SCRL_DOWN          &kp PIPE  &kp EXCL  &kp AT  &kp HASH  &kp TILDE    &trans
+                                &none  &none  &none   &kp UNDER  &kp LPAR  &kp RPAR
             >;
             sensor-bindings = <&no_encoder>;
         };
 
-        // Media layer (hold ESC left-outer thumb). Content on right hand: RGB on top
-        // row, media transport + ext-power on home row, output/BT select on bottom row.
         media_layer {
             display-name = "Media";
             bindings = <
-&kp LBRC  &bootloader  &none  &none  &to 0  &none                                   &none              &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_BRI            &kp RBRC
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &none  &none  &none  &ext_power EP_TOG  &kp C_PREV  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT   &trans
-&trans  &none  &kp RALT  &none  &none  &none       &rgb_ug RGB_TOG &none          &out OUT_TOG  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3    &trans
-                                &none  &none  &none   &kp C_STOP  &kp C_PP  &kp C_MUTE
+&kp LBRC  &rgb_ug RGB_EFF  &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_BRI  &rgb_ug RGB_TOG                                   &none              &none  &to 0  &none  &none  &bootloader            &kp RBRC
+&trans  &kp C_PREV  &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT  &ext_power EP_TOG              &none  &none  &none  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
+&trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &out OUT_TOG       &rgb_ug RGB_TOG &none          &none  &none  &none  &kp RALT  &none    &trans
+                                &kp C_MUTE  &kp C_PP  &kp C_STOP   &none  &none  &none
             >;
             sensor-bindings = <&rgb_encoder>;
         };
 
-        // Fun layer (hold DEL right-outer thumb). Content on left hand: function keys
-        // mirroring Num's digit positions, plus system keys on the inner column.
         fun_layer {
             display-name = "Fun";
             bindings = <
-&kp LBRC  &kp F12  &kp F7  &kp F8  &kp F9  &kp PRINTSCREEN                                   &none              &none  &to 0  &none  &none  &bootloader            &kp RBRC
-&trans  &kp F11  &kp F4  &kp F5  &kp F6  &kp SCROLLLOCK              &none  &none  &none  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
-&trans  &kp F10  &kp F1  &kp F2  &kp F3  &kp PAUSE_BREAK       &none &none          &none  &none  &none  &kp RALT  &none    &trans
-                                &kp K_APP  &kp SPACE  &kp TAB   &none  &none  &none
+&kp LBRC  &bootloader  &none  &none  &to 0  &none                                   &none              &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12            &kp RBRC
+&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &none  &none  &none  &kp SCROLLLOCK  &kp F4  &kp F5  &kp F6  &kp F11   &trans
+&trans  &none  &kp RALT  &none  &none  &none       &none &none          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10    &trans
+                                &none  &none  &none   &kp TAB  &kp SPACE  &kp K_APP
             >;
             sensor-bindings = <&no_encoder>;
         };
 
-        // Mouse layer (hold TAB left-inner thumb). Content on right hand: mouse
-        // movement on home row, wheel below, mirroring Nav's cursor arrangement.
         mouse_layer {
             display-name = "Mouse";
             bindings = <
-&kp LBKT  &bootloader  &none  &none  &to 0  &none                                   &none              &kp K_AGAIN  &kp LS(INS)  &kp LC(INS)  &kp LS(DEL)  &kp K_UNDO            &kp RBKT
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &none  &none  &none  &none  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT   &trans
-&trans  &none  &kp RALT  &none  &none  &none       &none &none          &none  &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP  &msc SCRL_RIGHT    &trans
-                                &none  &none  &none   &mkp MB2  &mkp MB1  &mkp MB3
+&kp LBKT  &msc SCRL_LEFT  &msc SCRL_DOWN  &msc SCRL_UP  &msc SCRL_RIGHT  &none                                   &none              &none  &to 0  &none  &none  &bootloader            &kp RBKT
+&trans  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none              &none  &none  &none  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
+&trans  &kp K_UNDO  &kp LS(DEL)  &kp LC(INS)  &kp LS(INS)  &kp K_AGAIN       &none &none          &none  &none  &none  &kp RALT  &none    &trans
+                                &mkp MB3  &mkp MB1  &mkp MB2   &none  &none  &none
             >;
             sensor-bindings = <&scroll_encoder>;
         };
 
-        // Button layer (hold Z or / bottom-row-outer, either hand). Mouse buttons,
-        // mods, and clipboard, symmetric on both hands for use with a pointing device.
         button_layer {
             display-name = "Button";
             bindings = <
