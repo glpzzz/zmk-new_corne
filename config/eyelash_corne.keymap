@@ -30,8 +30,12 @@
 &soft_off { hold-time-ms = <2000>; };
 
 // Miryoku's own hold-tap tuning (tap-preferred, 200ms), applied to both the
-// built-in layer-tap behavior and our home-row-mod behavior below.
-&lt { tapping-term-ms = <200>; flavor = "tap-preferred"; };
+// built-in layer-tap behavior and our home-row-mod behavior below. quick-tap-ms
+// is a deviation from stock Miryoku (which defines none): tap then quickly
+// press-and-hold again within this window to repeat the tap key normally,
+// instead of re-triggering the hold-tap decision — needed since tap-hold keys
+// can't auto-repeat on their own while held.
+&lt { tapping-term-ms = <200>; flavor = "tap-preferred"; quick-tap-ms = <175>; };
 
 / {
     behaviors {
@@ -40,6 +44,7 @@
             #binding-cells = <2>;
             flavor = "tap-preferred";
             tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
             bindings = <&kp>, <&kp>;
         };
 
