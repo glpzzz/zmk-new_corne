@@ -154,9 +154,9 @@
         fun_layer {
             display-name = "Fun";
             bindings = <
-&kp LBRC  &bootloader  &none  &none  &to 0  &none                                   &none              &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12            &kp RBRC
-&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &none  &none  &none  &kp SCROLLLOCK  &kp F4  &kp F5  &kp F6  &kp F11   &trans
-&trans  &none  &kp RALT  &none  &none  &none       &none &none          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10    &trans
+&kp LBRC  &bootloader  &none  &none  &to 0  &none                                   &kp LG(PG_UP)              &kp PRINTSCREEN  &kp F7  &kp F8  &kp F9  &kp F12            &kp RBRC
+&trans  &kp LGUI  &kp LALT  &kp LCTRL  &kp LSHFT  &none              &kp LG(J)  &none  &kp LG(K)  &kp SCROLLLOCK  &kp F4  &kp F5  &kp F6  &kp F11   &trans
+&trans  &none  &kp RALT  &none  &none  &none       &none &kp LG(PG_DN)          &kp PAUSE_BREAK  &kp F1  &kp F2  &kp F3  &kp F10    &trans
                                 &none  &none  &none   &kp TAB  &kp SPACE  &kp K_APP
             >;
             sensor-bindings = <&no_encoder>;
