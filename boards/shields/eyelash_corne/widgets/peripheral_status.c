@@ -41,21 +41,24 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     init_rect_dsc(&bg_dsc, LVGL_BACKGROUND);
     lv_canvas_draw_rect(widget->content_canvas, 0, 0, EC_CONTENT_W, EC_CONTENT_H, &bg_dsc);
 
-    /* Battery row: "75%" right-aligned, charging bolt icon to its right. */
-    lv_draw_label_dsc_t label_dsc_right;
-    init_label_dsc(&label_dsc_right, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_RIGHT);
+    lv_draw_label_dsc_t label_dsc;
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
+
+    /* Battery band, y 0-64: percentage full-width, bolt icon stacked below
+     * when charging. */
     char batt_text[6] = {};
     snprintf(batt_text, sizeof(batt_text), "%d%%", state->battery);
-    lv_canvas_draw_text(widget->content_canvas, 0, 40, 20, &label_dsc_right, batt_text);
+    lv_canvas_draw_text(widget->content_canvas, 0, 16, EC_CONTENT_W, &label_dsc, batt_text);
     if (state->charging) {
-        ec_icon_bolt(widget->content_canvas, 22, 44, 10);
+        ec_icon_bolt(widget->content_canvas, 9, 36, 14);
     }
 
-    /* Link row: overlapping rings = linked to central, separated = not. */
+    /* Link band, y 64-128: overlapping rings = linked to central, separated
+     * = not. */
     if (state->connected) {
-        ec_icon_link_ok(widget->content_canvas, 6, 76, 20);
+        ec_icon_link_ok(widget->content_canvas, 6, 92, 20);
     } else {
-        ec_icon_link_broken(widget->content_canvas, 6, 76, 20);
+        ec_icon_link_broken(widget->content_canvas, 6, 92, 20);
     }
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);

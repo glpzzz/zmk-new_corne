@@ -53,40 +53,37 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     init_rect_dsc(&bg_dsc, LVGL_BACKGROUND);
     lv_canvas_draw_rect(widget->content_canvas, 0, 0, EC_CONTENT_W, EC_CONTENT_H, &bg_dsc);
 
-    /* Battery row: "53%" right-aligned, charging bolt icon to its right. */
-    lv_draw_label_dsc_t label_dsc_right;
-    init_label_dsc(&label_dsc_right, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_RIGHT);
+    lv_draw_label_dsc_t label_dsc;
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
+
+    /* Battery band, y 0-40: percentage full-width (never wraps), bolt icon
+     * stacked below when charging. Icon and text share NO horizontal space
+     * with each other -- that's what caused the previous overlap/wrap. */
     char batt_text[6] = {};
     snprintf(batt_text, sizeof(batt_text), "%d%%", state->battery);
-    lv_canvas_draw_text(widget->content_canvas, 0, 10, 20, &label_dsc_right, batt_text);
+    lv_canvas_draw_text(widget->content_canvas, 0, 4, EC_CONTENT_W, &label_dsc, batt_text);
     if (state->charging) {
-        ec_icon_bolt(widget->content_canvas, 22, 14, 10);
+        ec_icon_bolt(widget->content_canvas, 9, 22, 14);
     }
 
-    /* Output row: bluetooth icon + profile number, or "USB". */
+    /* Output band, y 44-84: bluetooth icon above, profile number below; or
+     * "USB" centered alone. */
     switch (state->selected_endpoint.transport) {
-    case ZMK_TRANSPORT_USB: {
-        lv_draw_label_dsc_t label_dsc_center;
-        init_label_dsc(&label_dsc_center, LVGL_FOREGROUND, &lv_font_montserrat_14,
-                        LV_TEXT_ALIGN_CENTER);
-        lv_canvas_draw_text(widget->content_canvas, 0, 52, EC_CONTENT_W, &label_dsc_center, "USB");
+    case ZMK_TRANSPORT_USB:
+        lv_canvas_draw_text(widget->content_canvas, 0, 60, EC_CONTENT_W, &label_dsc, "USB");
         break;
-    }
     case ZMK_TRANSPORT_BLE: {
-        ec_icon_bluetooth(widget->content_canvas, 6, 48, 16);
-        lv_draw_label_dsc_t label_dsc_left;
-        init_label_dsc(&label_dsc_left, LVGL_FOREGROUND, &lv_font_montserrat_14,
-                        LV_TEXT_ALIGN_LEFT);
+        ec_icon_bluetooth(widget->content_canvas, 8, 44, 16);
         char profile_text[3] = {};
         snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);
-        lv_canvas_draw_text(widget->content_canvas, 24, 50, 8, &label_dsc_left, profile_text);
+        lv_canvas_draw_text(widget->content_canvas, 0, 64, EC_CONTENT_W, &label_dsc, profile_text);
         break;
     }
     }
 
-    /* Layer row: one icon per layer (see icons.c / EC_LAYER_ICONS). */
+    /* Layer band, y 88-128: one icon per layer (see icons.c / EC_LAYER_ICONS). */
     if (state->layer_index < EC_LAYER_ICON_COUNT) {
-        EC_LAYER_ICONS[state->layer_index](widget->content_canvas, 6, 94, 20);
+        EC_LAYER_ICONS[state->layer_index](widget->content_canvas, 6, 92, 20);
     }
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
