@@ -51,11 +51,11 @@ layers:
   - {t: '$$mdi:backspace-reverse-outline$$', h: Media}
   Nav:
   - (
-  - HOME
-  - PG DN
-  - PG UP
-  - END
-  - INS
+  - UNDO
+  - Sft+$$mdi:backspace-reverse-outline$$
+  - Ctl+INS
+  - Sft+INS
+  - AGAIN
   - PG UP
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: Base, h: toggle}
@@ -79,11 +79,11 @@ layers:
   - LGUI
   - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:transfer$$', type: trans}
-  - UNDO
-  - Sft+$$mdi:backspace-reverse-outline$$
-  - Ctl+INS
-  - Sft+INS
-  - AGAIN
+  - HOME
+  - PG DN
+  - PG UP
+  - END
+  - INS
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - PG DN
   - {t: '$$mdi:minus-circle-outline$$', type: none}
@@ -296,11 +296,11 @@ layers:
   - APP
   Mouse:
   - {t: '[', s: '{'}
-  - $$mdi:pan-left$$
-  - $$mdi:pan-down$$
-  - $$mdi:pan-up$$
-  - $$mdi:pan-right$$
-  - {t: '$$mdi:minus-circle-outline$$', type: none}
+  - UNDO
+  - Sft+$$mdi:backspace-reverse-outline$$
+  - Ctl+INS
+  - Sft+INS
+  - AGAIN
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: Base, h: toggle}
@@ -324,11 +324,11 @@ layers:
   - LGUI
   - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:transfer$$', type: trans}
-  - UNDO
-  - Sft+$$mdi:backspace-reverse-outline$$
-  - Ctl+INS
-  - Sft+INS
-  - AGAIN
+  - $$mdi:pan-left$$
+  - $$mdi:pan-down$$
+  - $$mdi:pan-up$$
+  - $$mdi:pan-right$$
+  - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
