@@ -45,6 +45,13 @@ struct layer_status_state {
     const char *label;
 };
 
+/* Fixed 3-letter abbreviation per layer, indexed by declaration order in
+ * eyelash_corne.keymap (default_layer=0 ... button_layer=7). */
+static const char *const LAYER_ABBREV[] = {
+    "BAS", "NAV", "NUM", "SYM", "MED", "FUN", "MOU", "BTN",
+};
+#define LAYER_ABBREV_COUNT (sizeof(LAYER_ABBREV) / sizeof(LAYER_ABBREV[0]))
+
 static void ec_redraw(struct zmk_widget_status *widget) {
     const struct ec_status_state *state = &widget->state;
 
@@ -74,11 +81,15 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     }
     lv_canvas_draw_text(widget->content_canvas, 0, 55, EC_CONTENT_W, &label_dsc, out_text);
 
-    /* Numeric-only: layer names ("Base", "Button", ...) are wider than the
-     * 32px-wide strip at any legible font and clip mid-word. */
-    char layer_text[6] = {};
-    snprintf(layer_text, sizeof(layer_text), "L%d", state->layer_index);
-    lv_canvas_draw_text(widget->content_canvas, 0, 100, EC_CONTENT_W, &label_dsc, layer_text);
+    /* Fixed-width font + fixed 3-letter abbreviation: full layer names
+     * ("Base", "Button", ...) are wider than the 32px-wide strip at any
+     * legible proportional font and clip mid-word. */
+    lv_draw_label_dsc_t label_dsc_mono;
+    init_label_dsc(&label_dsc_mono, LVGL_FOREGROUND, &lv_font_unscii_8, LV_TEXT_ALIGN_CENTER);
+
+    const char *layer_text =
+        (state->layer_index < LAYER_ABBREV_COUNT) ? LAYER_ABBREV[state->layer_index] : "???";
+    lv_canvas_draw_text(widget->content_canvas, 0, 100, EC_CONTENT_W, &label_dsc_mono, layer_text);
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
     lv_obj_invalidate(widget->screen_canvas);
