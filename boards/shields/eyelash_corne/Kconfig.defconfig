@@ -64,9 +64,6 @@ config LV_USE_CANVAS
 config LV_FONT_MONTSERRAT_14
     default y
 
-config LV_FONT_MONTSERRAT_18
-    default y
-
 endif # ZMK_DISPLAY
 
 if SSD1306

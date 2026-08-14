@@ -58,7 +58,7 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     char batt_text[8] = {};
     snprintf(batt_text, sizeof(batt_text), "%d%%%s", state->battery,
              state->charging ? LV_SYMBOL_CHARGE : "");
-    lv_canvas_draw_text(widget->content_canvas, 0, 6, EC_CONTENT_W, &label_dsc, batt_text);
+    lv_canvas_draw_text(widget->content_canvas, 0, 10, EC_CONTENT_W, &label_dsc, batt_text);
 
     char out_text[8] = {};
     switch (state->selected_endpoint.transport) {
@@ -72,18 +72,13 @@ static void ec_redraw(struct zmk_widget_status *widget) {
         }
         break;
     }
-    lv_canvas_draw_text(widget->content_canvas, 0, 48, EC_CONTENT_W, &label_dsc, out_text);
+    lv_canvas_draw_text(widget->content_canvas, 0, 55, EC_CONTENT_W, &label_dsc, out_text);
 
-    lv_draw_label_dsc_t label_dsc_big;
-    init_label_dsc(&label_dsc_big, LVGL_FOREGROUND, &lv_font_montserrat_18, LV_TEXT_ALIGN_CENTER);
-
-    char layer_text[12] = {};
-    if (state->layer_label != NULL && strlen(state->layer_label) > 0) {
-        snprintf(layer_text, sizeof(layer_text), "%s", state->layer_label);
-    } else {
-        snprintf(layer_text, sizeof(layer_text), "L%d", state->layer_index);
-    }
-    lv_canvas_draw_text(widget->content_canvas, 0, 96, EC_CONTENT_W, &label_dsc_big, layer_text);
+    /* Numeric-only: layer names ("Base", "Button", ...) are wider than the
+     * 32px-wide strip at any legible font and clip mid-word. */
+    char layer_text[6] = {};
+    snprintf(layer_text, sizeof(layer_text), "L%d", state->layer_index);
+    lv_canvas_draw_text(widget->content_canvas, 0, 100, EC_CONTENT_W, &label_dsc, layer_text);
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
     lv_obj_invalidate(widget->screen_canvas);
