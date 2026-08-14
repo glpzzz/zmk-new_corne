@@ -70,6 +70,24 @@ void ec_icon_hash(lv_obj_t *canvas, int dx, int dy, int size) {
     draw_path(canvas, dx, dy, size, h2, 2);
 }
 
+/* Num: keypad dots */
+void ec_icon_keypad(lv_obj_t *canvas, int dx, int dy, int size) {
+    lv_draw_arc_dsc_t dot_dsc;
+    lv_coord_t r = (lv_coord_t)(1.4f * size / 20.0f);
+    if (r < 1) {
+        r = 1;
+    }
+    init_arc_dsc(&dot_dsc, LVGL_FOREGROUND, r);
+    static const float xs[] = {6, 10, 14};
+    static const float ys[] = {6, 10, 14};
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            lv_canvas_draw_arc(canvas, sx(dx, size, xs[i]), sy(dy, size, ys[j]), r, 0, 360,
+                                &dot_dsc);
+        }
+    }
+}
+
 /* Sym: starburst */
 void ec_icon_starburst(lv_obj_t *canvas, int dx, int dy, int size) {
     lv_draw_line_dsc_t dsc;
@@ -145,6 +163,23 @@ void ec_icon_cursor_click(lv_obj_t *canvas, int dx, int dy, int size) {
     draw_path(canvas, dx, dy, size, cursor, 8);
 }
 
+/* Button: raised dot */
+void ec_icon_button_dot(lv_obj_t *canvas, int dx, int dy, int size) {
+    lv_coord_t cx = sx(dx, size, 10), cy = sy(dy, size, 10);
+    lv_coord_t r_fill = (lv_coord_t)(4.2f * size / 20.0f);
+    if (r_fill < 1) {
+        r_fill = 1;
+    }
+    lv_draw_arc_dsc_t fill_dsc;
+    init_arc_dsc(&fill_dsc, LVGL_FOREGROUND, r_fill);
+    lv_canvas_draw_arc(canvas, cx, cy, r_fill, 0, 360, &fill_dsc);
+
+    lv_draw_arc_dsc_t ring_dsc;
+    init_arc_dsc(&ring_dsc, LVGL_FOREGROUND, LINE_W);
+    lv_coord_t r_ring = (lv_coord_t)(7 * size / 20.0f);
+    lv_canvas_draw_arc(canvas, cx, cy, r_ring, 0, 360, &ring_dsc);
+}
+
 /* Output row: bluetooth glyph */
 void ec_icon_bluetooth(lv_obj_t *canvas, int dx, int dy, int size) {
     static const float pts[][2] = {
@@ -180,12 +215,12 @@ void ec_icon_link_broken(lv_obj_t *canvas, int dx, int dy, int size) {
 }
 
 const ec_icon_fn EC_LAYER_ICONS[EC_LAYER_ICON_COUNT] = {
-    ec_icon_home,         /* 0 Base */
-    ec_icon_dpad,         /* 1 Nav */
-    ec_icon_hash,         /* 2 Num */
-    ec_icon_starburst,    /* 3 Sym */
-    ec_icon_play,         /* 4 Media */
-    ec_icon_gear,         /* 5 Fun */
-    ec_icon_mouse,        /* 6 Mouse */
-    ec_icon_cursor_click, /* 7 Button */
+    ec_icon_home,       /* 0 Base */
+    ec_icon_dpad,       /* 1 Nav */
+    ec_icon_keypad,     /* 2 Num */
+    ec_icon_starburst,  /* 3 Sym */
+    ec_icon_play,       /* 4 Media */
+    ec_icon_gear,       /* 5 Fun */
+    ec_icon_mouse,      /* 6 Mouse */
+    ec_icon_button_dot, /* 7 Button */
 };
