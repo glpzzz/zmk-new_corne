@@ -1,6 +1,6 @@
 ---
 include:
-  - board: nice_nano_v2
+  - board: nice_nano
     shield: eyelash_corne_right nice_view
-  - board: nice_nano_v2
+  - board: nice_nano
     shield: eyelash_corne_left nice_view
