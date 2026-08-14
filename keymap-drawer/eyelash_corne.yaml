@@ -198,11 +198,11 @@ layers:
   - )
   Media:
   - '{'
-  - RGB EFF
-  - RGB HUI
-  - RGB SAI
-  - RGB BRI
-  - RGB TOG
+  - {t: RGB EFF, s: RGB EFR}
+  - {t: RGB HUI, s: RGB HUD}
+  - {t: RGB SAI, s: RGB SAD}
+  - {t: RGB BRI, s: RGB BRD}
+  - {t: RGB TOG, s: RGB OFF}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
   - {t: '$$mdi:minus-circle-outline$$', type: none}
