@@ -19,7 +19,6 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/split/bluetooth/peripheral.h>
 #include <zmk/events/split_peripheral_status_changed.h>
 #include <zmk/usb.h>
-#include "icons.h"
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -44,22 +43,13 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     lv_draw_label_dsc_t label_dsc;
     init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
 
-    /* Battery band, y 0-64: percentage full-width, bolt icon stacked below
-     * when charging. */
-    char batt_text[6] = {};
-    snprintf(batt_text, sizeof(batt_text), "%d%%", state->battery);
-    lv_canvas_draw_text(widget->content_canvas, 0, 16, EC_CONTENT_W, &label_dsc, batt_text);
-    if (state->charging) {
-        ec_icon_bolt(widget->content_canvas, 9, 36, 14);
-    }
+    char batt_text[8] = {};
+    snprintf(batt_text, sizeof(batt_text), "%d%%%s", state->battery,
+             state->charging ? LV_SYMBOL_CHARGE : "");
+    lv_canvas_draw_text(widget->content_canvas, 0, 40, EC_CONTENT_W, &label_dsc, batt_text);
 
-    /* Link band, y 64-128: overlapping rings = linked to central, separated
-     * = not. */
-    if (state->connected) {
-        ec_icon_link_ok(widget->content_canvas, 6, 92, 20);
-    } else {
-        ec_icon_link_broken(widget->content_canvas, 6, 92, 20);
-    }
+    lv_canvas_draw_text(widget->content_canvas, 0, 70, EC_CONTENT_W, &label_dsc,
+                         state->connected ? LV_SYMBOL_WIFI : LV_SYMBOL_CLOSE);
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
     lv_obj_invalidate(widget->screen_canvas);

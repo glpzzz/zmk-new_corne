@@ -23,7 +23,6 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/ble.h>
 #include <zmk/endpoints.h>
 #include <zmk/keymap.h>
-#include "icons.h"
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -46,6 +45,13 @@ struct layer_status_state {
     const char *label;
 };
 
+/* Fixed 3-letter abbreviation per layer, indexed by declaration order in
+ * eyelash_corne.keymap (default_layer=0 ... button_layer=7). */
+static const char *const LAYER_ABBREV[] = {
+    "BAS", "NAV", "NUM", "SYM", "MED", "FUN", "MOU", "BTN",
+};
+#define LAYER_ABBREV_COUNT (sizeof(LAYER_ABBREV) / sizeof(LAYER_ABBREV[0]))
+
 static void ec_redraw(struct zmk_widget_status *widget) {
     const struct ec_status_state *state = &widget->state;
 
@@ -56,35 +62,34 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     lv_draw_label_dsc_t label_dsc;
     init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
 
-    /* Battery band, y 0-40: percentage full-width (never wraps), bolt icon
-     * stacked below when charging. Icon and text share NO horizontal space
-     * with each other -- that's what caused the previous overlap/wrap. */
-    char batt_text[6] = {};
-    snprintf(batt_text, sizeof(batt_text), "%d%%", state->battery);
-    lv_canvas_draw_text(widget->content_canvas, 0, 4, EC_CONTENT_W, &label_dsc, batt_text);
-    if (state->charging) {
-        ec_icon_bolt(widget->content_canvas, 9, 22, 14);
-    }
+    char batt_text[8] = {};
+    snprintf(batt_text, sizeof(batt_text), "%d%%%s", state->battery,
+             state->charging ? LV_SYMBOL_CHARGE : "");
+    lv_canvas_draw_text(widget->content_canvas, 0, 10, EC_CONTENT_W, &label_dsc, batt_text);
 
-    /* Output band, y 44-84: bluetooth icon above, profile number below; or
-     * "USB" centered alone. */
+    char out_text[8] = {};
     switch (state->selected_endpoint.transport) {
     case ZMK_TRANSPORT_USB:
-        lv_canvas_draw_text(widget->content_canvas, 0, 60, EC_CONTENT_W, &label_dsc, "USB");
+        strcat(out_text, LV_SYMBOL_USB);
         break;
-    case ZMK_TRANSPORT_BLE: {
-        ec_icon_bluetooth(widget->content_canvas, 8, 44, 16);
-        char profile_text[3] = {};
-        snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);
-        lv_canvas_draw_text(widget->content_canvas, 0, 64, EC_CONTENT_W, &label_dsc, profile_text);
+    case ZMK_TRANSPORT_BLE:
+        snprintf(out_text, sizeof(out_text), "BT%d", state->active_profile_index + 1);
+        if (!state->active_profile_connected) {
+            strcat(out_text, state->active_profile_bonded ? LV_SYMBOL_CLOSE : LV_SYMBOL_SETTINGS);
+        }
         break;
     }
-    }
+    lv_canvas_draw_text(widget->content_canvas, 0, 55, EC_CONTENT_W, &label_dsc, out_text);
 
-    /* Layer band, y 88-128: one icon per layer (see icons.c / EC_LAYER_ICONS). */
-    if (state->layer_index < EC_LAYER_ICON_COUNT) {
-        EC_LAYER_ICONS[state->layer_index](widget->content_canvas, 6, 92, 20);
-    }
+    /* Fixed-width font + fixed 3-letter abbreviation: full layer names
+     * ("Base", "Button", ...) are wider than the 32px-wide strip at any
+     * legible proportional font and clip mid-word. */
+    lv_draw_label_dsc_t label_dsc_mono;
+    init_label_dsc(&label_dsc_mono, LVGL_FOREGROUND, &lv_font_unscii_8, LV_TEXT_ALIGN_CENTER);
+
+    const char *layer_text =
+        (state->layer_index < LAYER_ABBREV_COUNT) ? LAYER_ABBREV[state->layer_index] : "???";
+    lv_canvas_draw_text(widget->content_canvas, 0, 100, EC_CONTENT_W, &label_dsc_mono, layer_text);
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
     lv_obj_invalidate(widget->screen_canvas);
