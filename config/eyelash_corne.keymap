@@ -113,7 +113,7 @@
 &kp LPAR  &kp K_UNDO  &kp LS(DEL)  &kp LC(INS)  &kp LS(INS)  &kp K_AGAIN                                   &kp PG_UP              &none  &to 0  &none  &none  &bootloader            &kp RPAR
 &trans  &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &caps_word              &kp HOME  &none  &kp END  &none  &kp LSHFT  &kp LCTRL  &kp LALT  &kp LGUI   &trans
 &trans  &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &kp INS       &none &kp PG_DN          &none  &none  &none  &kp RALT  &none    &trans
-                                &kp DEL  &kp BSPC  &kp RET   &none  &none  &none
+                                &trans  &trans  &trans   &trans  &trans  &trans
             >;
             sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
         };
