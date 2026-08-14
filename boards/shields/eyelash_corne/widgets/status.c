@@ -23,6 +23,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/ble.h>
 #include <zmk/endpoints.h>
 #include <zmk/keymap.h>
+#include "icons.h"
 
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
@@ -45,13 +46,6 @@ struct layer_status_state {
     const char *label;
 };
 
-/* Fixed 3-letter abbreviation per layer, indexed by declaration order in
- * eyelash_corne.keymap (default_layer=0 ... button_layer=7). */
-static const char *const LAYER_ABBREV[] = {
-    "BAS", "NAV", "NUM", "SYM", "MED", "FUN", "MOU", "BTN",
-};
-#define LAYER_ABBREV_COUNT (sizeof(LAYER_ABBREV) / sizeof(LAYER_ABBREV[0]))
-
 static void ec_redraw(struct zmk_widget_status *widget) {
     const struct ec_status_state *state = &widget->state;
 
@@ -59,37 +53,41 @@ static void ec_redraw(struct zmk_widget_status *widget) {
     init_rect_dsc(&bg_dsc, LVGL_BACKGROUND);
     lv_canvas_draw_rect(widget->content_canvas, 0, 0, EC_CONTENT_W, EC_CONTENT_H, &bg_dsc);
 
-    lv_draw_label_dsc_t label_dsc;
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
+    /* Battery row: "53%" right-aligned, charging bolt icon to its right. */
+    lv_draw_label_dsc_t label_dsc_right;
+    init_label_dsc(&label_dsc_right, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_RIGHT);
+    char batt_text[6] = {};
+    snprintf(batt_text, sizeof(batt_text), "%d%%", state->battery);
+    lv_canvas_draw_text(widget->content_canvas, 0, 10, 20, &label_dsc_right, batt_text);
+    if (state->charging) {
+        ec_icon_bolt(widget->content_canvas, 22, 14, 10);
+    }
 
-    char batt_text[8] = {};
-    snprintf(batt_text, sizeof(batt_text), "%d%%%s", state->battery,
-             state->charging ? LV_SYMBOL_CHARGE : "");
-    lv_canvas_draw_text(widget->content_canvas, 0, 10, EC_CONTENT_W, &label_dsc, batt_text);
-
-    char out_text[8] = {};
+    /* Output row: bluetooth icon + profile number, or "USB". */
     switch (state->selected_endpoint.transport) {
-    case ZMK_TRANSPORT_USB:
-        strcat(out_text, LV_SYMBOL_USB);
-        break;
-    case ZMK_TRANSPORT_BLE:
-        snprintf(out_text, sizeof(out_text), "BT%d", state->active_profile_index + 1);
-        if (!state->active_profile_connected) {
-            strcat(out_text, state->active_profile_bonded ? LV_SYMBOL_CLOSE : LV_SYMBOL_SETTINGS);
-        }
+    case ZMK_TRANSPORT_USB: {
+        lv_draw_label_dsc_t label_dsc_center;
+        init_label_dsc(&label_dsc_center, LVGL_FOREGROUND, &lv_font_montserrat_14,
+                        LV_TEXT_ALIGN_CENTER);
+        lv_canvas_draw_text(widget->content_canvas, 0, 52, EC_CONTENT_W, &label_dsc_center, "USB");
         break;
     }
-    lv_canvas_draw_text(widget->content_canvas, 0, 55, EC_CONTENT_W, &label_dsc, out_text);
+    case ZMK_TRANSPORT_BLE: {
+        ec_icon_bluetooth(widget->content_canvas, 6, 48, 16);
+        lv_draw_label_dsc_t label_dsc_left;
+        init_label_dsc(&label_dsc_left, LVGL_FOREGROUND, &lv_font_montserrat_14,
+                        LV_TEXT_ALIGN_LEFT);
+        char profile_text[3] = {};
+        snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);
+        lv_canvas_draw_text(widget->content_canvas, 24, 50, 8, &label_dsc_left, profile_text);
+        break;
+    }
+    }
 
-    /* Fixed-width font + fixed 3-letter abbreviation: full layer names
-     * ("Base", "Button", ...) are wider than the 32px-wide strip at any
-     * legible proportional font and clip mid-word. */
-    lv_draw_label_dsc_t label_dsc_mono;
-    init_label_dsc(&label_dsc_mono, LVGL_FOREGROUND, &lv_font_unscii_8, LV_TEXT_ALIGN_CENTER);
-
-    const char *layer_text =
-        (state->layer_index < LAYER_ABBREV_COUNT) ? LAYER_ABBREV[state->layer_index] : "???";
-    lv_canvas_draw_text(widget->content_canvas, 0, 100, EC_CONTENT_W, &label_dsc_mono, layer_text);
+    /* Layer row: one icon per layer (see icons.c / EC_LAYER_ICONS). */
+    if (state->layer_index < EC_LAYER_ICON_COUNT) {
+        EC_LAYER_ICONS[state->layer_index](widget->content_canvas, 6, 94, 20);
+    }
 
     ec_rotate_into_screen(widget->content_buf, widget->screen_buf);
     lv_obj_invalidate(widget->screen_canvas);

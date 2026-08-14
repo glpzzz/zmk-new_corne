@@ -21,6 +21,18 @@ void init_label_dsc(lv_draw_label_dsc_t *label_dsc, lv_color_t color, const lv_f
     label_dsc->align = align;
 }
 
+void init_line_dsc(lv_draw_line_dsc_t *line_dsc, lv_color_t color, uint8_t width) {
+    lv_draw_line_dsc_init(line_dsc);
+    line_dsc->color = color;
+    line_dsc->width = width;
+}
+
+void init_arc_dsc(lv_draw_arc_dsc_t *arc_dsc, lv_color_t color, uint8_t width) {
+    lv_draw_arc_dsc_init(arc_dsc);
+    arc_dsc->color = color;
+    arc_dsc->width = width;
+}
+
 /* Rotate the upright 32x128 content buffer 90 degrees clockwise into the
  * physical 128x32 screen buffer. */
 void ec_rotate_into_screen(lv_color_t *content_buf, lv_color_t *screen_buf) {
